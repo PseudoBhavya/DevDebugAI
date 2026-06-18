@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevDebug AI — Debug your career before recruiters do</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,0,500;9..144,0,600;9..144,1,400;9..144,1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#070809;color:#e4e6e8;min-height:100vh;overflow-x:hidden}
+
+:root{
+  --bg-0:#070809;
+  --bg-1:#0e1012;
+  --bg-2:#15171a;
+  --bg-3:#1c1f23;
+  --ink:#e4e6e8;
+  --ink-2:#9b9fa4;
+  --ink-3:#5f6368;
+  --amber:#d99a5b;
+  --amber-light:#e8b888;
+  --sage:#7a8a78;
+  --red:#d6634d;
+  --red-light:#e08a72;
+  --blue:#6b8a9c;
+  --blue-light:#8fb1c4;
+  --border:rgba(255,255,255,0.07);
+  --border-2:rgba(255,255,255,0.13);
+  --serif:'Fraunces',serif;
+  --mono:'JetBrains Mono',monospace;
+  --radius:16px
+}
+
+/* ─── NAV ─── */
+.nav{position:absolute;top:0;left:0;right:0;z-index:200;background:transparent;height:72px;display:flex;align-items:center}
+.nav-inner{max-width:1200px;width:100%;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;position:relative;height:100%}
+.nav-logo{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--ink);letter-spacing:-0.3px;display:flex;align-items:center;gap:8px;cursor:pointer;z-index:2;flex-shrink:0}
+.nav-logo .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.nav-links{display:flex;gap:4px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-link{font-size:13.5px;color:var(--ink-2);padding:7px 14px;border-radius:20px;cursor:pointer;transition:all 0.2s;border:none;background:none;font-family:inherit;font-weight:500;white-space:nowrap}
+.nav-link:hover{color:var(--ink);background:rgba(255,255,255,0.05)}
+.nav-link.active{color:var(--bg-0);background:var(--ink)}
+
+/* ─── PAGES ─── */
+.page{display:none;min-height:100vh;flex-direction:column}
+.page.active{display:flex}
+
+/* ─── HERO ─── */
+.hero-video-wrap{position:relative;height:88vh;min-height:560px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#050607}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0.55}
+.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.70);z-index:1}
+.hero-grid{position:absolute;inset:0;z-index:1;opacity:0.25;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:64px 64px}
+.hero-content{position:relative;z-index:2;padding:80px 24px 60px;max-width:700px;margin:0 auto;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:4px 10px;font-size:9.5px;color:rgba(228,230,232,0.6);margin-bottom:32px;backdrop-filter:blur(8px);opacity:0.75}
+.hero-badge .pulse{width:5px;height:5px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{font-family:var(--serif);font-size:clamp(72px,8vw,120px);font-weight:800;letter-spacing:-4px;line-height:0.95;margin:0 auto 28px;max-width:800px;color:#f4f3ef}
+.hero h1 em{font-style:italic;color:var(--amber-light);font-weight:500}
+.hero p{font-size:18px;color:rgba(228,230,232,0.8);line-height:1.6;max-width:480px;margin:0 auto 36px;font-weight:300;letter-spacing:0.01em;opacity:0.8}
+.btn-row{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:#f4f3ef;color:#070809;border:none;padding:13px 32px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;letter-spacing:0.01em}
+.btn-primary:hover{background:var(--amber-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(217,154,91,0.25)}
+.btn-ghost{background:rgba(255,255,255,0.07);color:#f4f3ef;border:1px solid var(--border-2);padding:13px 32px;border-radius:30px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.2s;backdrop-filter:blur(8px)}
+.btn-ghost:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px)}
+
+/* ─── FEATURES ─── */
+.features{padding:72px 0;width:100%;background:var(--bg-0);border-top:1px solid var(--border)}
+.features-inner{max-width:1200px;margin:0 auto;padding:0 40px}
+.section-label{font-family:var(--mono);font-size:10.5px;color:var(--sage);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.section-heading{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--ink);margin-bottom:32px;letter-spacing:-0.4px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.feat-card{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius);padding:24px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden}
+.feat-card:hover{border-color:var(--border-2);transform:translateY(-4px);background:var(--bg-2);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
+.feat-card.coming{opacity:0.45;cursor:not-allowed;pointer-events:none}
+.feat-icon{font-size:22px;margin-bottom:12px}
+.feat-title{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--ink);margin-bottom:7px}
+.feat-desc{font-size:13px;color:var(--ink-2);line-height:1.65}
+.badge-soon{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--ink-3);letter-spacing:0.5px}
+
+/* ─── PAGE INNER ─── */
+.page-inner{max-width:1200px;margin:0 auto;padding:72px 40px 60px;flex:1;width:100%}
+.page-header{margin-bottom:52px;text-align:center}
+.page-title{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--ink);margin-bottom:10px;letter-spacing:-0.5px}
+.page-title .dim{color:var(--ink-3)}
+.page-sub{font-size:15px;color:var(--ink-2);line-height:1.6}
+
+/* ─── UPLOAD ZONE ─── */
+.upload-wrap{max-width:600px;margin:0 auto 24px}
+.upload-zone{border:1.5px dashed var(--border-2);border-radius:18px;padding:52px 36px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-1);margin-bottom:16px;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--amber);background:rgba(217,154,91,0.05);transform:scale(1.01)}
+.upload-icon{font-size:30px;margin-bottom:12px}
+.upload-title{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--ink);margin-bottom:6px}
+.upload-sub{font-size:13px;color:var(--ink-2);line-height:1.6}
+.upload-sub span{color:var(--amber);font-family:var(--mono)}
+input[type=file]{display:none}
+.url-input-row{display:flex;gap:10px;margin-bottom:12px}
+.url-input{flex:1;background:var(--bg-1);border:1px solid var(--border);border-radius:30px;padding:12px 20px;font-size:14px;color:var(--ink);font-family:inherit;outline:none;transition:border 0.15s}
+.url-input:focus{border-color:var(--amber)}
+.url-input::placeholder{color:var(--ink-3)}
+
+/* ─── LOADING ─── */
+.loading-screen{text-align:center;padding:60px 24px}
+.spinner{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:4px;font-weight:500}
+.loading-sub{font-size:12px;color:var(--ink-3);margin-bottom:22px}
+.terminal-lines{font-family:var(--mono);font-size:12.5px;text-align:left;max-width:400px;margin:0 auto;background:var(--bg-1);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.t-line{display:flex;align-items:center;gap:9px;padding:5px 0;opacity:0;transition:opacity 0.3s}
+.t-line.show{opacity:1}
+.t-icon{font-size:11px;color:var(--ink-3);transition:color 0.2s;width:12px;flex-shrink:0}
+.t-line.active .t-icon{color:var(--amber);animation:blink 0.7s infinite}
+.t-line.done .t-icon{color:var(--sage)}
+.t-text{color:var(--ink-2);font-size:12px}
+.t-line.done .t-text{color:var(--ink-3)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+
+/* ─── HEALTH CIRCLE ─── */
+.health-grid{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;background:var(--bg-1);border:1px solid var(--border);border-radius:18px;padding:26px 28px;margin-bottom:24px}
+.circle-wrap{position:relative;width:106px;height:106px;flex-shrink:0}
+.circle-wrap svg{transform:rotate(-90deg)}
+.circle-score{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--ink);line-height:1}
+.score-label{font-size:9.5px;color:var(--ink-3);margin-top:2px;letter-spacing:0.5px}
+.health-meta h3{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--ink);margin-bottom:12px}
+.stat-row{display:flex;gap:8px;flex-wrap:wrap}
+.stat-chip{display:flex;align-items:center;gap:5px;font-size:12px;padding:5px 13px;border-radius:20px;font-weight:500}
+.stat-chip.err{background:rgba(214,99,77,0.12);color:var(--red-light)}
+.stat-chip.warn{background:rgba(217,154,91,0.14);color:var(--amber-light)}
+.stat-chip.ok{background:rgba(122,138,120,0.14);color:#a3b3a1}
+
+/* ─── SECTION TITLE ─── */
+.section-title{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--ink);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.section-title::before{content:'';width:14px;height:1.5px;background:var(--amber);flex-shrink:0}
+
+/* ─── ATS GRID ─── */
+.ats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:28px}
+.ats-item{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:16px 18px}
+.ats-label{font-size:12.5px;color:var(--ink-2);margin-bottom:10px;display:flex;justify-content:space-between;font-weight:500}
+.ats-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.ats-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.ats-score{font-family:var(--mono);font-size:12.5px;font-weight:600}
+
+/* ─── BUGS ─── */
+.bug-grid{display:grid;gap:12px;margin-bottom:28px}
+.bug-card{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px 20px;border-left:3px solid transparent}
+.bug-card.critical{border-left-color:var(--red)}
+.bug-card.high{border-left-color:var(--amber)}
+.bug-card.medium{border-left-color:var(--blue)}
+.bug-card.low{border-left-color:var(--ink-3)}
+.bug-header{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.bug-id{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.bug-title{font-family:var(--serif);font-size:15.5px;font-weight:500;color:var(--ink);flex:1}
+.sev-badge{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:20px;font-weight:600;letter-spacing:0.3px;white-space:nowrap}
+.sev-badge.critical{background:rgba(214,99,77,0.14);color:var(--red-light)}
+.sev-badge.high{background:rgba(217,154,91,0.16);color:var(--amber-light)}
+.sev-badge.medium{background:rgba(107,138,156,0.16);color:var(--blue-light)}
+.sev-badge.low{background:rgba(122,138,120,0.16);color:#a3b3a1}
+.bug-desc{font-size:13.5px;color:var(--ink-2);line-height:1.7;margin-bottom:11px}
+.bug-fix{font-size:12.5px;color:#a3b3a1;font-family:var(--mono);background:rgba(122,138,120,0.07);border:1px solid rgba(122,138,120,0.15);border-radius:9px;padding:10px 14px;line-height:1.6}
+
+/* ─── KEYWORDS ─── */
+.kw-section{margin-bottom:28px}
+.kw-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+.kw-badge{font-family:var(--mono);font-size:11.5px;padding:5px 13px;border-radius:20px}
+.kw-badge.missing{background:rgba(214,99,77,0.1);color:var(--red-light);border:1px solid rgba(214,99,77,0.2)}
+.kw-badge.found{background:rgba(122,138,120,0.1);color:#a3b3a1;border:1px solid rgba(122,138,120,0.2)}
+.kw-sub{font-size:12px;color:var(--ink-3)}
+
+/* ─── PATCH NOTES ─── */
+.patch{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:12px}
+.patch-ver{font-family:var(--mono);font-size:11px;color:var(--amber-light);margin-bottom:10px;font-weight:500;letter-spacing:0.3px}
+.patch-item{font-size:13.5px;color:var(--ink-2);padding:4px 0;display:flex;gap:9px;line-height:1.6}
+.patch-item::before{content:'+';color:var(--sage);font-family:var(--mono);font-weight:600;flex-shrink:0}
+
+/* ─── ROAST ─── */
+.roast-section{background:var(--bg-1);border:1px solid var(--border);border-radius:15px;overflow:hidden;margin-bottom:28px}
+.roast-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.15s}
+.roast-header:hover{background:rgba(255,255,255,0.02)}
+.roast-header h4{font-family:var(--serif);font-size:15px;font-weight:500;color:var(--ink)}
+.roast-toggle{font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+.roast-body{padding:0 20px;display:none;border-top:1px solid var(--border)}
+.roast-body.open{display:block;padding:20px}
+.roast-line{background:rgba(214,99,77,0.05);border:1px solid rgba(214,99,77,0.12);border-radius:11px;padding:15px;margin-bottom:10px}
+.roast-line:last-child{margin-bottom:0}
+.roast-quote{font-family:var(--serif);font-size:14.5px;color:var(--red-light);font-style:italic;margin-bottom:8px;line-height:1.6}
+.roast-fix{font-size:12.5px;color:var(--ink-2);line-height:1.6}
+
+/* ─── AI FEEDBACK ─── */
+.ai-block{background:var(--bg-1);border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:28px}
+.ai-block-title{font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-bottom:14px;letter-spacing:0.5px}
+.ai-textarea{width:100%;background:var(--bg-0);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:13px;color:var(--ink);font-family:var(--mono);min-height:110px;resize:vertical;outline:none;transition:border 0.15s;line-height:1.6}
+.ai-textarea:focus{border-color:var(--amber)}
+.ai-textarea::placeholder{color:var(--ink-3)}
+.ai-btn-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.ai-output{margin-top:14px;font-size:13.5px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;display:none;border-top:1px solid var(--border);padding-top:14px}
+.ai-output.show{display:block}
+.ai-loading-inline{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.ai-dots span{animation:ai-blink 1.2s infinite;display:inline-block}
+.ai-dots span:nth-child(2){animation-delay:0.2s}
+.ai-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes ai-blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+
+/* ─── CHECKS ─── */
+.check-list{display:grid;gap:9px;margin-bottom:24px}
+.check-item{display:flex;align-items:center;gap:12px;background:var(--bg-1);border:1px solid var(--border);border-radius:11px;padding:13px 16px}
+.check-icon{width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-weight:700}
+.check-icon.pass{background:rgba(122,138,120,0.18);color:#a3b3a1}
+.check-icon.fail{background:rgba(214,99,77,0.18);color:var(--red-light)}
+.check-text{font-size:13.5px;color:var(--ink);font-weight:500}
+.check-sub{font-size:12px;color:var(--ink-3);margin-left:auto;white-space:nowrap}
+
+/* ─── REC GRID ─── */
+.rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.rec-card{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px}
+.rec-card h4{font-family:var(--serif);font-size:14px;margin-bottom:10px;font-weight:500}
+.rec-card h4.green{color:#a3b3a1}
+.rec-card h4.red{color:var(--red-light)}
+.rec-item{font-size:13px;color:var(--ink-2);padding:3px 0;display:flex;gap:7px;line-height:1.6}
+.rec-item::before{content:'—';color:var(--ink-3);flex-shrink:0}
+
+/* ─── DASHBOARD ─── */
+.dash-score{text-align:center;padding:48px 24px 40px;background:var(--bg-1);border:1px solid var(--border);border-radius:20px;margin-bottom:20px}
+.dash-score-eyebrow{font-size:10.5px;color:var(--ink-3);margin-bottom:8px;font-family:var(--mono);letter-spacing:1px}
+.dash-score-num{font-family:var(--serif);font-size:64px;font-weight:600;color:var(--ink);line-height:1;margin-bottom:6px}
+.dash-score-num span{color:var(--ink-3);font-size:34px}
+.build-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#a3b3a1;background:rgba(122,138,120,0.1);border:1px solid rgba(122,138,120,0.2);border-radius:20px;padding:6px 16px;margin-top:12px;font-weight:500;font-family:var(--mono)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);flex-shrink:0}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:22px}
+.metric-card{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px}
+.metric-label{font-size:10.5px;color:var(--ink-3);font-family:var(--mono);margin-bottom:8px;letter-spacing:0.3px}
+.metric-val{font-family:var(--serif);font-size:25px;font-weight:600;color:var(--ink)}
+.metric-val.amber{color:var(--amber-light)}
+.metric-val.red{color:var(--red-light)}
+.metric-val.blue{color:var(--blue-light)}
+
+/* ─── BEFORE/AFTER ─── */
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.ba-card{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px;overflow:hidden}
+.ba-label{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase}
+.ba-card.after{border-color:rgba(122,138,120,0.3)}
+.ba-card.after .ba-label{color:var(--sage)}
+.ba-content{font-size:13px;color:var(--ink-2);line-height:1.7;white-space:pre-wrap}
+
+/* ─── HISTORY ─── */
+.history-item{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s}
+.history-item:hover{border-color:var(--border-2);background:var(--bg-2)}
+.history-icon{font-size:18px;flex-shrink:0}
+.history-meta{flex:1}
+.history-type{font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-bottom:2px}
+.history-title{font-size:14px;color:var(--ink);font-weight:500}
+.history-time{font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-left:auto;white-space:nowrap}
+.history-score{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);margin-left:12px}
+
+/* ─── HIRING CONFIDENCE ─── */
+.confidence-bar-wrap{background:var(--bg-1);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.confidence-left .conf-label{font-size:11px;color:var(--ink-3);font-family:var(--mono);margin-bottom:6px}
+.confidence-val{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--amber-light)}
+.confidence-quote{font-size:12.5px;color:var(--ink-2);max-width:280px;line-height:1.65;font-style:italic}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:52px 0;margin-top:72px;background:var(--bg-0);position:relative;overflow:hidden;width:100%}
+.footer-grid-bg{position:absolute;inset:0;opacity:0.35;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none}
+.footer-inner{max-width:1200px;margin:0 auto;padding:0 40px;position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+.footer-left .name{color:var(--ink);font-family:var(--serif);font-size:16px;font-weight:500;display:block;margin-bottom:3px}
+.footer-left .handle{color:var(--amber-light);font-family:var(--mono);font-size:11.5px;display:block;margin-bottom:2px}
+.footer-left .email{font-size:13px;color:var(--ink-2)}
+.footer-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.footer-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--ink-3);text-transform:uppercase}
+.footer-btn{background:var(--bg-1);border:1px solid var(--border-2);color:var(--ink);padding:10px 22px;border-radius:30px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.footer-btn:hover{border-color:rgba(255,255,255,0.25);background:var(--bg-2)}
+.footer-sub{font-size:11.5px;color:var(--ink-3);max-width:220px;text-align:right;line-height:1.5}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-2);border:1px solid var(--border-2);border-radius:12px;padding:12px 18px;font-size:13.5px;color:var(--ink);z-index:999;transform:translateY(80px);opacity:0;transition:all 0.35s;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:rgba(122,138,120,0.4)}
+.toast.error{border-color:rgba(214,99,77,0.4)}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{text-align:center;padding:48px 24px;color:var(--ink-3)}
+.empty-icon{font-size:36px;margin-bottom:12px}
+.empty-title{font-family:var(--serif);font-size:18px;color:var(--ink-2);margin-bottom:6px}
+.empty-sub{font-size:13px}
+
+/* ─── TABS ─── */
+.tab-row{display:flex;gap:4px;background:var(--bg-1);border:1px solid var(--border);border-radius:30px;padding:4px;margin-bottom:24px;width:fit-content}
+.tab-btn{font-size:13px;color:var(--ink-2);padding:7px 18px;border-radius:24px;cursor:pointer;border:none;background:none;font-family:inherit;font-weight:500;transition:all 0.2s}
+.tab-btn.active{background:var(--ink);color:var(--bg-0)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ─── UTILS ─── */
+.divider{height:1px;background:var(--border);margin:28px 0}
+.mb-24{margin-bottom:24px}
+.mb-16{margin-bottom:16px}
+
+@media(max-width:768px){
+  .nav-inner{padding:0 20px}
+  .nav-links{gap:2px}
+  .nav-link{font-size:12px;padding:6px 10px}
+  .hero-content{padding:60px 20px 48px}
+  .hero h1{letter-spacing:-1.5px}
+  .hero p{font-size:15px}
+  .page-inner{padding:48px 20px 40px}
+  .features-inner{padding:0 20px}
+  .rec-grid,.before-after{grid-template-columns:1fr}
+  .health-grid{grid-template-columns:1fr;text-align:center}
+  .health-grid .circle-wrap{margin:0 auto}
+  .health-meta h3{margin-top:8px}
+  .footer-inner{flex-direction:column;align-items:flex-start;padding:0 20px}
+  .footer-right{align-items:flex-start}
+  .footer-sub{text-align:left}
+  .confidence-bar-wrap{flex-direction:column;align-items:flex-start}
+  .confidence-quote{max-width:100%}
+}
+@media(max-width:480px){
+  .hero-video-wrap{height:80vh;min-height:500px}
+  .btn-row{gap:10px}
+  .btn-primary,.btn-ghost{padding:11px 24px;font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="dot"></div>DevDebug AI
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('resume')">Resume</button>
+      <button class="nav-link" onclick="showPage('portfolio')">Portfolio</button>
+      <button class="nav-link" onclick="showPage('dashboard')">Dashboard</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HOME ═══════════════════════════════ -->
+<div class="page active" id="page-home">
+  <div class="hero-video-wrap">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="Cinematic mountain landscape with scenic vista, sweeping views of mountain ranges, natural scenery, atmospheric depth, professional website background video, smooth camera movement.mp4" type="video/mp4">
+    </video>
+    <div class="hero-grid"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><div class="pulse"></div>Career build status: v2.1.0 active</div>
+      <h1>Debug your <em>career</em><br>before recruiters do</h1>
+      <p>Find career bugs.<br>Get recruiter feedback.<br>Improve before you apply.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="showPage('resume')">Debug resume</button>
+        <button class="btn-ghost" onclick="showPage('portfolio')">Debug portfolio</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="features-inner">
+      <div class="section-label">Core modules</div>
+      <div class="section-heading">Find what's holding you back</div>
+      <div class="feat-grid">
+        <div class="feat-card" onclick="showPage('resume')">
+          <div class="feat-icon">📄</div>
+          <div class="feat-title">Resume debugger</div>
+          <div class="feat-desc">Real PDF parsing, ATS scoring engine, career bug detection, AI-powered rewrites via Gemini.</div>
+        </div>
+        <div class="feat-card" onclick="showPage('portfolio')">
+          <div class="feat-icon">⛰</div>
+          <div class="feat-title">Portfolio debugger</div>
+          <div class="feat-desc">Crawl your live portfolio URL, detect missing sections, recruiter view analysis, AI feedback.</div>
+        </div>
+        <div class="feat-card" onclick="showPage('dashboard')">
+          <div class="feat-icon">◎</div>
+          <div class="feat-title">Career dashboard</div>
+          <div class="feat-desc">Unified readiness score, persistent history, sprint roadmap, PDF report download.</div>
+        </div>
+        <div class="feat-card coming">
+          <div class="badge-soon">SOON</div>
+          <div class="feat-icon">⌥</div>
+          <div class="feat-title">GitHub debugger</div>
+          <div class="feat-desc">Commit patterns, repo quality, README analysis, contribution health.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid-bg"></div>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="name">Bhavya Pandey</span>
+        <span class="handle">$PseudoBhavya$</span>
+        <span class="email">bhavyapandey446@gmail.com</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-eyebrow">Sponsor</div>
+        <a class="footer-btn" href="https://digitalheroesco.com" target="_blank">Built for Digital Heroes ↗</a>
+        <div class="footer-sub">An initiative under the Digital Heroes ecosystem.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════ RESUME ═══════════════════════════════ -->
+<div class="page" id="page-resume">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-title">Resume debugger<span class="dim">.run()</span></div>
+      <div class="page-sub">Upload your resume PDF — we parse the real content and run full ATS analysis.</div>
+    </div>
+
+    <!-- Upload -->
+    <div id="resume-upload" class="upload-wrap">
+      <div class="upload-zone" id="resumeDropzone"
+        onclick="document.getElementById('resumeFile').click()"
+        ondragover="ev.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleResumeDrop(event)">
+        <div class="upload-icon">📎</div>
+        <div class="upload-title">Drop your resume here</div>
+        <div class="upload-sub">Supports <span>PDF</span> — drag &amp; drop or click to browse</div>
+        <input type="file" id="resumeFile" accept=".pdf" onchange="handleResumeFile(this.files[0])">
+      </div>
+      <button class="btn-primary" onclick="runResumeDemo()" style="width:100%;border-radius:13px;padding:13px">Run with demo resume</button>
+    </div>
+
+    <!-- Loading -->
+    <div id="resume-loading" style="display:none">
+      <div class="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-title">Analyzing resume</div>
+        <div class="loading-sub">Running 6 diagnostic modules</div>
+        <div class="terminal-lines">
+          <div class="t-line" id="rl0"><span class="t-icon">›</span><span class="t-text">Parsing PDF structure...</span></div>
+          <div class="t-line" id="rl1"><span class="t-icon">›</span><span class="t-text">Extracting text content...</span></div>
+          <div class="t-line" id="rl2"><span class="t-icon">›</span><span class="t-text">Running ATS compatibility checks...</span></div>
+          <div class="t-line" id="rl3"><span class="t-icon">›</span><span class="t-text">Detecting career bugs...</span></div>
+          <div class="t-line" id="rl4"><span class="t-icon">›</span><span class="t-text">Finding missing keywords...</span></div>
+          <div class="t-line" id="rl5"><span class="t-icon">›</span><span class="t-text">Generating AI patch notes...</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="resume-results" style="display:none">
+
+      <!-- Health -->
+      <div class="health-grid" id="resumeHealthGrid">
+        <div class="circle-wrap">
+          <svg width="106" height="106" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" id="resumeCircle" stroke="#d99a5b" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="47.5" stroke-linecap="round"/>
+          </svg>
+          <div class="circle-score">
+            <span class="score-num" id="resumeScoreNum">—</span>
+            <span class="score-label">health</span>
+          </div>
+        </div>
+        <div class="health-meta">
+          <h3>Resume health</h3>
+          <div class="stat-row" id="resumeStatRow">
+            <div class="stat-chip err" id="resumeErrors">— errors</div>
+            <div class="stat-chip warn" id="resumeWarnings">— warnings</div>
+            <div class="stat-chip ok" id="resumePassed">— passed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATS -->
+      <div class="section-title">ATS score breakdown</div>
+      <div class="ats-grid" id="atsGrid"></div>
+
+      <!-- Bugs -->
+      <div class="section-title">Career bugs detected</div>
+      <div class="bug-grid" id="resumeBugsGrid"></div>
+
+      <!-- Keywords -->
+      <div class="section-title">Keyword analysis</div>
+      <div class="kw-section">
+        <div class="kw-sub" style="margin-bottom:8px;color:var(--ink-2);font-size:13px;font-weight:500">✓ Found keywords</div>
+        <div class="kw-grid" id="kwFound"></div>
+        <div class="kw-sub" style="margin:14px 0 8px;color:var(--ink-2);font-size:13px;font-weight:500">✕ Missing keywords</div>
+        <div class="kw-grid" id="kwMissing"></div>
+      </div>
+
+      <!-- Patch Notes (AI) -->
+      <div class="section-title">AI patch notes</div>
+      <div id="patchNotesContainer"></div>
+
+      <!-- Roast -->
+      <div class="roast-section">
+        <div class="roast-header" onclick="toggleRoast('r-resume','roast-toggle-resume')">
+          <h4>🔥 Roast mode</h4>
+          <span class="roast-toggle" id="roast-toggle-resume">Enable →</span>
+        </div>
+        <div class="roast-body" id="r-resume">
+          <div id="roastResumeContent">
+            <div class="ai-loading-inline"><span>Loading roast</span><span class="ai-dots"><span>.</span><span>.</span><span>.</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Feedback -->
+      <div class="section-title">AI resume feedback &amp; rebuilder</div>
+      <div class="ai-block">
+        <div class="ai-block-title">PASTE RESUME TEXT OR IT WILL USE PARSED CONTENT</div>
+        <textarea class="ai-textarea" id="aiResumeInput" placeholder="Resume text auto-filled after PDF parse. You can also paste directly..."></textarea>
+        <div class="ai-btn-row">
+          <button class="btn-primary" onclick="getResumeFeedback()" style="border-radius:30px">Get AI feedback</button>
+          <button class="btn-ghost" onclick="getResumeRewrite()" style="border-radius:30px;padding:13px 24px;font-size:14px">✦ Rebuild resume</button>
+          <button class="btn-ghost" onclick="downloadReport()" style="border-radius:30px;padding:13px 24px;font-size:14px">↓ Download report</button>
+        </div>
+        <div class="ai-output" id="aiResumeOutput"></div>
+      </div>
+
+      <!-- Before / After -->
+      <div id="beforeAfterSection" style="display:none">
+        <div class="section-title">Before / After preview</div>
+        <div class="before-after">
+          <div class="ba-card">
+            <div class="ba-label">◦ BEFORE</div>
+            <div class="ba-content" id="baBeforeContent"></div>
+          </div>
+          <div class="ba-card after">
+            <div class="ba-label">✓ AFTER — AI IMPROVED</div>
+            <div class="ba-content" id="baAfterContent"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid-bg"></div>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="name">Bhavya Pandey</span>
+        <span class="handle">$PseudoBhavya$</span>
+        <span class="email">bhavyapandey446@gmail.com</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-eyebrow">Sponsor</div>
+        <a class="footer-btn" href="https://digitalheroesco.com" target="_blank">Built for Digital Heroes ↗</a>
+        <div class="footer-sub">An initiative under the Digital Heroes ecosystem.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════ PORTFOLIO ═══════════════════════════════ -->
+<div class="page" id="page-portfolio">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-title">Portfolio debugger<span class="dim">.crawl()</span></div>
+      <div class="page-sub">Enter your portfolio URL — we fetch the real page and run a full career bug scan.</div>
+    </div>
+
+    <div id="port-upload" style="max-width:600px;margin:0 auto 24px">
+      <div class="url-input-row">
+        <input class="url-input" id="portfolioUrl" type="url" placeholder="https://yourportfolio.com">
+        <button class="btn-primary" onclick="runPortfolioAnalysis()" style="border-radius:30px;white-space:nowrap">Analyze →</button>
+      </div>
+      <div style="font-size:12px;color:var(--ink-3)">Enter your deployed portfolio URL for real analysis</div>
+    </div>
+
+    <div id="port-loading" style="display:none">
+      <div class="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-title">Crawling portfolio</div>
+        <div class="loading-sub">Fetching and analyzing your site</div>
+        <div class="terminal-lines">
+          <div class="t-line" id="pl0"><span class="t-icon">›</span><span class="t-text">Fetching portfolio URL...</span></div>
+          <div class="t-line" id="pl1"><span class="t-icon">›</span><span class="t-text">Parsing HTML structure...</span></div>
+          <div class="t-line" id="pl2"><span class="t-icon">›</span><span class="t-text">Detecting sections & links...</span></div>
+          <div class="t-line" id="pl3"><span class="t-icon">›</span><span class="t-text">Scoring recruiter signals...</span></div>
+          <div class="t-line" id="pl4"><span class="t-icon">›</span><span class="t-text">Generating AI feedback...</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="port-results" style="display:none">
+
+      <div class="health-grid">
+        <div class="circle-wrap">
+          <svg width="106" height="106" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" id="portCircle" stroke="#6b8a9c" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="63.3" stroke-linecap="round"/>
+          </svg>
+          <div class="circle-score">
+            <span class="score-num" id="portScoreNum">—</span>
+            <span class="score-label">health</span>
+          </div>
+        </div>
+        <div class="health-meta">
+          <h3>Portfolio health</h3>
+          <div class="stat-row" id="portStatRow">
+            <div class="stat-chip err" id="portErrors">— errors</div>
+            <div class="stat-chip warn" id="portWarnings">— warnings</div>
+            <div class="stat-chip ok" id="portPassed">— passed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Section checks</div>
+      <div class="check-list" id="portChecklist"></div>
+
+      <div class="section-title">What recruiters see</div>
+      <div class="rec-grid" id="portRecGrid">
+        <div class="rec-card"><h4 class="green">Strengths</h4><div id="portStrengths"></div></div>
+        <div class="rec-card"><h4 class="red">Weaknesses</h4><div id="portWeaknesses"></div></div>
+      </div>
+
+      <div class="confidence-bar-wrap">
+        <div class="confidence-left">
+          <div class="conf-label">HIRING CONFIDENCE</div>
+          <div class="confidence-val" id="portConfidence">—%</div>
+        </div>
+        <div class="confidence-quote" id="portQuote">"..."</div>
+      </div>
+
+      <div class="section-title">Portfolio bugs detected</div>
+      <div class="bug-grid" id="portBugsGrid"></div>
+
+      <div class="roast-section">
+        <div class="roast-header" onclick="toggleRoast('r-portfolio','roast-toggle-portfolio')">
+          <h4>🔥 Roast mode</h4>
+          <span class="roast-toggle" id="roast-toggle-portfolio">Enable →</span>
+        </div>
+        <div class="roast-body" id="r-portfolio">
+          <div id="roastPortContent">
+            <div class="ai-loading-inline"><span>Loading roast</span><span class="ai-dots"><span>.</span><span>.</span><span>.</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">AI portfolio feedback</div>
+      <div class="ai-block">
+        <div class="ai-block-title">DESCRIBE YOUR PORTFOLIO OR PASTE ABOUT TEXT</div>
+        <textarea class="ai-textarea" id="aiPortInput" placeholder="Portfolio content auto-extracted. Add context about your projects, goals, or target roles for more precise feedback..."></textarea>
+        <div class="ai-btn-row">
+          <button class="btn-primary" onclick="getPortfolioFeedback()" style="border-radius:30px">Get AI feedback</button>
+          <button class="btn-ghost" onclick="downloadPortfolioReport()" style="border-radius:30px;padding:13px 24px;font-size:14px">↓ Download report</button>
+        </div>
+        <div class="ai-output" id="aiPortOutput"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid-bg"></div>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="name">Bhavya Pandey</span>
+        <span class="handle">$PseudoBhavya$</span>
+        <span class="email">bhavyapandey446@gmail.com</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-eyebrow">Sponsor</div>
+        <a class="footer-btn" href="https://digitalheroesco.com" target="_blank">Built for Digital Heroes ↗</a>
+        <div class="footer-sub">An initiative under the Digital Heroes ecosystem.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="page-inner">
+    <div class="page-header">
+      <div class="page-title">Career dashboard<span class="dim">.status()</span></div>
+      <div class="page-sub">Your unified developer readiness report — updates automatically from each analysis.</div>
+    </div>
+
+    <div class="dash-score">
+      <div class="dash-score-eyebrow">DEVELOPER READINESS SCORE</div>
+      <div class="dash-score-num" id="dashTotal">—<span>/100</span></div>
+      <div class="build-status" id="dashBuildStatus"><div class="status-dot"></div>No analyses run yet</div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="metric-card"><div class="metric-label">resume_health</div><div class="metric-val" id="dashResume">—%</div></div>
+      <div class="metric-card"><div class="metric-label">portfolio_health</div><div class="metric-val amber" id="dashPortfolio">—%</div></div>
+      <div class="metric-card"><div class="metric-label">total_errors</div><div class="metric-val red" id="dashErrors">—</div></div>
+      <div class="metric-card"><div class="metric-label">total_warnings</div><div class="metric-val amber" id="dashWarnings">—</div></div>
+      <div class="metric-card"><div class="metric-label">ats_score</div><div class="metric-val blue" id="dashAts">—</div></div>
+    </div>
+
+    <div class="section-title">Top career bugs</div>
+    <div id="dashBugs">
+      <div class="empty-state"><div class="empty-icon">◎</div><div class="empty-title">No bugs detected yet</div><div class="empty-sub">Run a resume or portfolio analysis first</div></div>
+    </div>
+
+    <div class="section-title">Patch roadmap</div>
+    <div id="dashRoadmap">
+      <div class="empty-state" style="padding:24px"><div class="empty-sub">Roadmap generates after analysis</div></div>
+    </div>
+
+    <div class="section-title">Analysis history</div>
+    <div id="dashHistory">
+      <div class="empty-state"><div class="empty-icon">◷</div><div class="empty-title">No history yet</div><div class="empty-sub">Past analyses will appear here</div></div>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="downloadFullReport()" style="border-radius:30px">↓ Download full report PDF</button>
+      <button class="btn-ghost" onclick="clearHistory()" style="border-radius:30px;padding:13px 24px;font-size:14px">Clear history</button>
+    </div>
+
+    <div class="section-title" style="margin-top:36px">Coming soon</div>
+    <div class="feat-grid">
+      <div class="feat-card coming">
+        <div class="badge-soon">SOON</div>
+        <div class="feat-icon">⌥</div>
+        <div class="feat-title">GitHub debugger</div>
+        <div class="feat-desc">Commit frequency, repo quality, README scores, contribution graph analysis.</div>
+      </div>
+      <div class="feat-card coming">
+        <div class="badge-soon">SOON</div>
+        <div class="feat-icon">◈</div>
+        <div class="feat-title">LinkedIn debugger</div>
+        <div class="feat-desc">Headline optimization, keyword gaps, connection quality, about section scoring.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-grid-bg"></div>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="name">Bhavya Pandey</span>
+        <span class="handle">$PseudoBhavya$</span>
+        <span class="email">bhavyapandey446@gmail.com</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-eyebrow">Sponsor</div>
+        <a class="footer-btn" href="https://digitalheroesco.com" target="_blank">Built for Digital Heroes ↗</a>
+        <div class="footer-sub">An initiative under the Digital Heroes ecosystem.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════ STATE ═══════════════════════
+const state = {
+  resumeText: '',
+  resumeAnalysis: null,
+  portfolioAnalysis: null,
+  history: JSON.parse(localStorage.getItem('devdebug_history') || '[]'),
+};
+
+// ═══════════════════════ NAV ═══════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach((l, i) => {
+    l.classList.remove('active');
+  });
+  const pages = ['home','resume','portfolio','dashboard'];
+  const idx = pages.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.nav-link')[idx].classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'dashboard') updateDashboard();
+}
+
+// ═══════════════════════ TOAST ═══════════════════════
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast ' + type;
+  requestAnimationFrame(() => { el.classList.add('show'); });
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ═══════════════════════ LOADING SEQUENCE ═══════════════════════
+function runLoadingSequence(prefix, count, onDone) {
+  const lines = Array.from({ length: count }, (_, i) => document.getElementById(prefix + i));
+  lines.forEach(l => { if (l) l.classList.add('show'); });
+  let i = 0;
+  function next() {
+    if (i > 0 && lines[i - 1]) {
+      lines[i-1].classList.remove('active');
+      lines[i-1].classList.add('done');
+      const ic = lines[i-1].querySelector('.t-icon');
+      if (ic) { ic.textContent = '✓'; }
+    }
+    if (i < count && lines[i]) {
+      lines[i].classList.add('active');
+      i++;
+      setTimeout(next, 680);
+    } else {
+      setTimeout(onDone, 300);
+    }
+  }
+  next();
+}
+
+// ═══════════════════════ ROAST TOGGLE ═══════════════════════
+function toggleRoast(bodyId, labelId) {
+  const body = document.getElementById(bodyId);
+  const label = document.getElementById(labelId);
+  body.classList.toggle('open');
+  label.textContent = body.classList.contains('open') ? 'Collapse ↑' : 'Enable →';
+}
+
+// ═══════════════════════ PDF PARSING ═══════════════════════
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+async function parsePDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n';
+  }
+  return text.trim();
+}
+
+function handleResumeDrop(e) {
+  e.preventDefault();
+  document.getElementById('resumeDropzone').classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) handleResumeFile(f);
+}
+
+async function handleResumeFile(file) {
+  if (!file) return;
+  if (file.type !== 'application/pdf') { toast('Please upload a PDF file', 'error'); return; }
+
+  document.getElementById('resume-upload').style.display = 'none';
+  document.getElementById('resume-loading').style.display = 'block';
+  document.getElementById('resume-results').style.display = 'none';
+
+  try {
+    const lines = [document.getElementById('rl0'), document.getElementById('rl1')];
+    lines.forEach(l => { if (l) l.classList.add('show', 'active'); });
+
+    const text = await parsePDF(file);
+    state.resumeText = text;
+    document.getElementById('aiResumeInput').value = text.substring(0, 2000);
+
+    if (lines[0]) { lines[0].classList.remove('active'); lines[0].classList.add('done'); lines[0].querySelector('.t-icon').textContent = '✓'; }
+    if (lines[1]) { lines[1].classList.remove('active'); lines[1].classList.add('done'); lines[1].querySelector('.t-icon').textContent = '✓'; }
+
+    runLoadingSequence('rl', 6, async () => {
+      const analysis = analyzeResume(text);
+      state.resumeAnalysis = analysis;
+      renderResumeResults(analysis);
+      saveToHistory('resume', analysis);
+
+      document.getElementById('resume-loading').style.display = 'none';
+      document.getElementById('resume-results').style.display = 'block';
+
+      // AI patch notes in background
+      generateAIPatchNotes(text, analysis);
+      generateRoastContent(text, 'resume');
+    });
+  } catch (err) {
+    toast('Error parsing PDF: ' + err.message, 'error');
+    document.getElementById('resume-upload').style.display = 'block';
+    document.getElementById('resume-loading').style.display = 'none';
+  }
+}
+
+// ═══════════════════════ DEMO RESUME ═══════════════════════
+function runResumeDemo() {
+  const demoText = `John Developer
+john.dev@gmail.com | github.com/johndev
+
+EDUCATION
+B.Tech Computer Science, NIT Bhopal — 2024
+
+SKILLS
+Python, JavaScript, React, Node.js, HTML, CSS
+
+EXPERIENCE
+Software Intern — StartupXYZ (May 2023 – Aug 2023)
+- Worked on the backend API
+- Helped with database migration
+- Did some frontend work
+
+PROJECTS
+Todo App
+- Made a todo application using React
+- It has add, edit, delete features
+
+Weather App
+- Used OpenWeatherMap API
+- Shows weather for cities`;
+
+  state.resumeText = demoText;
+  document.getElementById('aiResumeInput').value = demoText;
+  document.getElementById('resume-upload').style.display = 'none';
+  document.getElementById('resume-loading').style.display = 'block';
+
+  runLoadingSequence('rl', 6, () => {
+    const analysis = analyzeResume(demoText);
+    state.resumeAnalysis = analysis;
+    renderResumeResults(analysis);
+    saveToHistory('resume', analysis);
+    document.getElementById('resume-loading').style.display = 'none';
+    document.getElementById('resume-results').style.display = 'block';
+    generateAIPatchNotes(demoText, analysis);
+    generateRoastContent(demoText, 'resume');
+  });
+}
+
+// ═══════════════════════ ATS SCORING ENGINE ═══════════════════════
+const TECH_KEYWORDS = ['python','javascript','typescript','react','angular','vue','node','express','django','flask','fastapi','sql','mysql','postgresql','mongodb','redis','docker','kubernetes','git','github','aws','gcp','azure','linux','rest','api','graphql','html','css','java','c++','go','rust','machine learning','deep learning','tensorflow','pytorch','scikit','pandas','numpy'];
+const SOFT_KEYWORDS = ['leadership','communication','teamwork','problem solving','analytical','collaboration','agile','scrum','sprint','deadline','cross-functional'];
+const INDUSTRY_KEYWORDS = ['ci/cd','devops','microservices','cloud','deployment','testing','unit test','integration','version control','code review','pull request','open source'];
+const POWER_VERBS = ['architected','built','deployed','designed','developed','engineered','implemented','launched','led','optimized','reduced','improved','increased','delivered','shipped','created','automated','scaled','migrated','refactored'];
+const WEAK_VERBS = ['worked on','helped with','assisted','did','made','was responsible','contributed to','involved in','part of','participated'];
+const SECTIONS = ['education','experience','skills','projects','contact','summary','objective','certifications','achievements'];
+
+function analyzeResume(text) {
+  const lower = text.toLowerCase();
+  const lines = text.split('\n').filter(l => l.trim());
+  const bullets = lines.filter(l => l.trim().match(/^[-•*►▸▪]|^\d\./));
+
+  // ─ Section detection
+  const sectionsFound = SECTIONS.filter(s => lower.includes(s));
+  const sectionsMissing = SECTIONS.filter(s => !lower.includes(s) && !['certifications','objective'].includes(s));
+
+  // ─ Keyword scoring
+  const foundTech = TECH_KEYWORDS.filter(k => lower.includes(k));
+  const foundSoft = SOFT_KEYWORDS.filter(k => lower.includes(k));
+  const foundIndustry = INDUSTRY_KEYWORDS.filter(k => lower.includes(k));
+  const missingTech = TECH_KEYWORDS.filter(k => !lower.includes(k)).slice(0, 8);
+
+  const totalFoundKw = foundTech.length + foundSoft.length + foundIndustry.length;
+  const kwScore = Math.min(30, Math.round((totalFoundKw / 20) * 30));
+
+  // ─ Structure score
+  const structScore = Math.min(20, sectionsFound.length * 4 + (lower.includes('github') || lower.includes('linkedin') ? 2 : 0));
+
+  // ─ Formatting score
+  const hasEmail = /[\w.-]+@[\w.-]+\.[a-z]{2,}/i.test(text);
+  const hasGithub = lower.includes('github');
+  const hasLinkedin = lower.includes('linkedin');
+  const hasPhone = /\+?[\d\s()-]{10,}/.test(text);
+  const formatScore = Math.min(15, (hasEmail?4:0) + (hasGithub?3:0) + (hasLinkedin?3:0) + (hasPhone?2:0) + (bullets.length > 3 ? 3 : 0));
+
+  // ─ Bullet quality
+  const weakBullets = bullets.filter(b => WEAK_VERBS.some(v => b.toLowerCase().includes(v)));
+  const hasPowerVerbs = bullets.filter(b => POWER_VERBS.some(v => b.toLowerCase().includes(v)));
+  const hasMetrics = bullets.filter(b => /\d+%|\d+ (user|client|people|feature|project|day|hour|ms|second)/i.test(b));
+  const bulletScore = Math.min(15, Math.max(0, 15 - weakBullets.length * 3 + hasPowerVerbs.length * 2 + hasMetrics.length * 2));
+
+  // ─ Readability
+  const avgLen = lines.reduce((a, l) => a + l.length, 0) / (lines.length || 1);
+  const readScore = Math.min(10, avgLen < 120 ? 8 : avgLen < 160 ? 6 : 4);
+
+  // ─ Projects score
+  const hasProjectLinks = lower.includes('github.com') && lower.match(/github\.com\/[\w-]+\/[\w-]+/);
+  const hasLiveLinks = lower.includes('vercel') || lower.includes('netlify') || lower.includes('heroku') || lower.match(/https?:\/\/(?!github)/);
+  const projectCount = (lower.match(/project/g) || []).length;
+  const projScore = Math.min(10, (hasProjectLinks?3:0) + (hasLiveLinks?2:0) + Math.min(4, projectCount) + (hasMetrics.length > 0 ? 1 : 0));
+
+  const atsTotal = kwScore + structScore + formatScore + bulletScore + readScore + projScore;
+  const health = Math.round(50 + atsTotal * 0.5);
+
+  // ─ Generate bugs
+  const bugs = [];
+  let bugIdx = 1;
+
+  if (hasMetrics.length === 0) bugs.push({ id: bugIdx++, title: 'No measurable impact in bullets', severity: 'critical', desc: 'Every bullet reads like a task list, not an achievement. ATS and recruiters both score impact metrics heavily — zero metrics means zero differentiation.', fix: 'Add at least one number per bullet. "Reduced load time by 40%", "served 200+ users", "cut deployment time from 20 min to 3 min".' });
+
+  if (weakBullets.length >= 2) bugs.push({ id: bugIdx++, title: 'Weak action verbs detected', severity: 'critical', desc: `${weakBullets.length} bullets use passive language like "worked on" or "helped with". These signal junior thinking and score poorly in ATS keyword matching.`, fix: 'Replace every passive verb. "Worked on auth system" → "Architected JWT-based auth, reducing login errors by 30%".' });
+
+  if (!hasProjectLinks) bugs.push({ id: bugIdx++, title: 'No GitHub project links', severity: 'high', desc: 'Projects with no links read as theoretical. Recruiters click GitHub repos to verify your code quality before scheduling interviews.', fix: 'Add full GitHub URLs to each project. Format: github.com/username/repo-name.' });
+
+  if (!hasLinkedin) bugs.push({ id: bugIdx++, title: 'Missing LinkedIn URL', severity: 'medium', desc: 'Recruiters cross-reference LinkedIn before contacting candidates. Missing it adds friction and reduces reply rate.', fix: 'Add your custom LinkedIn URL: linkedin.com/in/yourname' });
+
+  if (sectionsMissing.includes('summary')) bugs.push({ id: bugIdx++, title: 'No professional summary', severity: 'high', desc: 'Recruiters spend 6-7 seconds scanning a resume. A missing summary means they start with raw experience — no narrative, no hook.', fix: 'Add a 2-3 line summary: "CS student at [X], specializing in [Y]. Built [Z] with [tech]. Seeking internship in [domain]."' });
+
+  if (projScore < 5) bugs.push({ id: bugIdx++, title: 'Projects section underdeveloped', severity: 'high', desc: 'Projects are your strongest signal as a student without full-time experience. Thin project descriptions fail ATS and recruiter review alike.', fix: 'Each project needs: name, tech stack, 2-3 bullets with impact, GitHub link, and live demo link.' });
+
+  if (foundTech.length < 8) bugs.push({ id: bugIdx++, title: 'Low technical keyword density', severity: 'medium', desc: `Only ${foundTech.length} technical keywords detected. ATS filters typically require 12-15+ matching keywords to pass the initial screen.`, fix: 'Add a dedicated Skills section listing all technologies. Include both tools and concepts (e.g., "REST APIs, CI/CD, Docker, Unit Testing").' });
+
+  const errorCount = bugs.filter(b => b.severity === 'critical').length;
+  const warnCount = bugs.filter(b => b.severity === 'high').length;
+  const passedCount = 12 - errorCount - warnCount;
+
+  return {
+    health, atsTotal, kwScore, structScore, formatScore, bulletScore, readScore, projScore,
+    foundTech, foundSoft, foundIndustry, missingTech,
+    sectionsFound, sectionsMissing,
+    bugs, errorCount, warnCount, passedCount,
+    hasMetrics, hasPowerVerbs, weakBullets,
+    text
+  };
+}
+
+// ═══════════════════════ RENDER RESUME RESULTS ═══════════════════════
+function renderResumeResults(a) {
+  // Score circle
+  document.getElementById('resumeScoreNum').textContent = a.health;
+  const offset = 263.9 - (263.9 * a.health / 100);
+  document.getElementById('resumeCircle').setAttribute('stroke-dashoffset', offset);
+  const color = a.health >= 80 ? '#7a8a78' : a.health >= 65 ? '#d99a5b' : '#d6634d';
+  document.getElementById('resumeCircle').setAttribute('stroke', color);
+
+  document.getElementById('resumeErrors').textContent = a.errorCount + ' errors';
+  document.getElementById('resumeWarnings').textContent = a.warnCount + ' warnings';
+  document.getElementById('resumePassed').textContent = a.passedCount + ' passed';
+
+  // ATS grid
+  const atsData = [
+    { label: 'Keywords', score: a.kwScore, max: 30, color: a.kwScore >= 24 ? '#7a8a78' : a.kwScore >= 18 ? '#d99a5b' : '#d6634d' },
+    { label: 'Structure', score: a.structScore, max: 20, color: a.structScore >= 16 ? '#7a8a78' : '#d99a5b' },
+    { label: 'Formatting', score: a.formatScore, max: 15, color: a.formatScore >= 12 ? '#7a8a78' : '#d99a5b' },
+    { label: 'Bullet quality', score: a.bulletScore, max: 15, color: a.bulletScore >= 10 ? '#7a8a78' : a.bulletScore >= 6 ? '#d99a5b' : '#d6634d' },
+    { label: 'Readability', score: a.readScore, max: 10, color: a.readScore >= 8 ? '#7a8a78' : '#d99a5b' },
+    { label: 'Projects', score: a.projScore, max: 10, color: a.projScore >= 7 ? '#7a8a78' : a.projScore >= 4 ? '#d99a5b' : '#d6634d' },
+  ];
+  const atsTitle = document.querySelector('.section-title');
+  document.querySelectorAll('.section-title')[0].textContent; // just read
+  document.getElementById('atsGrid').innerHTML = atsData.map(d => `
+    <div class="ats-item">
+      <div class="ats-label">
+        <span>${d.label}</span>
+        <span class="ats-score" style="color:${d.color}">${d.score}/${d.max}</span>
+      </div>
+      <div class="ats-bar">
+        <div class="ats-fill" style="width:${Math.round(d.score/d.max*100)}%;background:${d.color}"></div>
+      </div>
+    </div>`).join('');
+
+  // Section title for ATS
+  document.querySelectorAll('#resume-results .section-title')[0].textContent = '';
+  document.querySelectorAll('#resume-results .section-title')[0].innerHTML = `ATS score breakdown — <strong style="color:var(--amber-light)">${a.atsTotal}/100</strong>`;
+
+  // Bugs
+  document.getElementById('resumeBugsGrid').innerHTML = a.bugs.map(b => `
+    <div class="bug-card ${b.severity}">
+      <div class="bug-header">
+        <span class="bug-id">Bug #${String(b.id).padStart(3,'0')}</span>
+        <span class="bug-title">${b.title}</span>
+        <span class="sev-badge ${b.severity}">${b.severity.toUpperCase()}</span>
+      </div>
+      <div class="bug-desc">${b.desc}</div>
+      <div class="bug-fix">Fix: ${b.fix}</div>
+    </div>`).join('');
+
+  // Keywords
+  document.getElementById('kwFound').innerHTML = [...a.foundTech, ...a.foundSoft.slice(0,3)].map(k => `<span class="kw-badge found">${k}</span>`).join('');
+  document.getElementById('kwMissing').innerHTML = a.missingTech.map(k => `<span class="kw-badge missing">${k}</span>`).join('');
+}
+
+// ═══════════════════════ AI PATCH NOTES (Claude API) ═══════════════════════
+async function generateAIPatchNotes(resumeText, analysis) {
+  const container = document.getElementById('patchNotesContainer');
+  container.innerHTML = '<div class="ai-loading-inline"><span>Generating AI patch notes</span><span class="ai-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+
+  try {
+    const prompt = `You are DevDebug AI. Based on this resume analysis, generate exactly 3 patch notes in this EXACT format (no other text):
+
+v1.1 — [short category name]
++ [actionable fix item]
++ [actionable fix item]
++ [actionable fix item]
+
+v1.2 — [short category name]
++ [actionable fix item]
++ [actionable fix item]
+
+v1.3 — [short category name]
++ [actionable fix item]
++ [actionable fix item]
+
+Resume summary: ${resumeText.substring(0, 600)}
+Issues detected: ${analysis.bugs.map(b => b.title).join(', ')}`;
+
+    const res = await callClaude(prompt, 'You are DevDebug AI, an expert career advisor for software developer internship roles. Be specific and actionable. Output patch notes only, no preamble.');
+    const patches = parsePatchNotes(res);
+    container.innerHTML = patches;
+  } catch (e) {
+    container.innerHTML = renderFallbackPatchNotes(analysis);
+  }
+}
+
+function parsePatchNotes(text) {
+  const blocks = text.trim().split(/\n(?=v\d+\.\d+)/);
+  return blocks.map(block => {
+    const lines = block.trim().split('\n').filter(l => l.trim());
+    if (!lines.length) return '';
+    const ver = lines[0].trim();
+    const items = lines.slice(1).filter(l => l.trim().startsWith('+'));
+    return `<div class="patch">
+      <div class="patch-ver">${ver}</div>
+      ${items.map(i => `<div class="patch-item">${i.replace(/^\+\s*/, '')}</div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function renderFallbackPatchNotes(a) {
+  const bugs = a.bugs;
+  return `
+    <div class="patch">
+      <div class="patch-ver">v1.1 — bullet quality patch</div>
+      <div class="patch-item">Replace all weak verbs with power action verbs (architected, shipped, deployed)</div>
+      <div class="patch-item">Add quantified impact to at least 3 bullets per experience entry</div>
+      <div class="patch-item">Trim bullets to one line max, two lines for complex achievements</div>
+    </div>
+    <div class="patch">
+      <div class="patch-ver">v1.2 — projects module update</div>
+      <div class="patch-item">Add GitHub repo URL and live demo link to every project</div>
+      <div class="patch-item">Add tech stack inline: "Tech: React, FastAPI, PostgreSQL, Docker"</div>
+      <div class="patch-item">Add one measurable outcome per project description</div>
+    </div>
+    <div class="patch">
+      <div class="patch-ver">v1.3 — ATS keyword patch</div>
+      <div class="patch-item">Add missing keywords: ${a.missingTech.slice(0,4).join(', ')}</div>
+      <div class="patch-item">Create a dedicated Skills section with tech organized by category</div>
+    </div>`;
+}
+
+async function generateRoastContent(text, type) {
+  const containerId = type === 'resume' ? 'roastResumeContent' : 'roastPortContent';
+  const container = document.getElementById(containerId);
+
+  try {
+    const sysPrompt = 'You are DevDebug AI Roast Mode. Write exactly 3 roast lines about this resume/portfolio. Format:\n[ROAST]: Your brutal honest observation in one italic sentence\n[FIX]: Specific actionable fix in one sentence\n\nSeparate each with ---\nBe sharp, specific, and funny but constructive.';
+    const content = type === 'resume' ? text.substring(0, 800) : text.substring(0, 800);
+    const res = await callClaude('Roast this ' + type + ':\n\n' + content, sysPrompt);
+
+    const blocks = res.split('---').filter(b => b.trim());
+    container.innerHTML = blocks.slice(0, 3).map(block => {
+      const roastMatch = block.match(/\[ROAST\]:\s*(.+)/);
+      const fixMatch = block.match(/\[FIX\]:\s*(.+)/);
+      if (!roastMatch) return '';
+      return `<div class="roast-line">
+        <div class="roast-quote">"${roastMatch[1].trim().replace(/^"|"$/g, '')}"</div>
+        ${fixMatch ? `<div class="roast-fix">Fix: ${fixMatch[1].trim()}</div>` : ''}
+      </div>`;
+    }).join('');
+  } catch (e) {
+    container.innerHTML = type === 'resume'
+      ? `<div class="roast-line"><div class="roast-quote">"Your resume has more adjectives than achievements. Passionate developer doesn't ship code — commits do."</div><div class="roast-fix">Fix: Remove every self-descriptor that isn't backed by a shipped project or metric.</div></div>
+         <div class="roast-line"><div class="roast-quote">"Recruiters hire impact, not intentions. Your project section reads like a README with zero stars."</div><div class="roast-fix">Fix: Add what problem it solved, who uses it, and one number proving it worked.</div></div>`
+      : `<div class="roast-line"><div class="roast-quote">"Beautiful website. Shame there's no way to actually hire you from it."</div><div class="roast-fix">Fix: Contact section, resume download link, and a CTA. Three things. This weekend.</div></div>`;
+  }
+}
+
+// ═══════════════════════ AI FEEDBACK ═══════════════════════
+async function getResumeFeedback() {
+  const text = document.getElementById('aiResumeInput').value.trim();
+  if (!text) { toast('Please add resume text first', 'error'); return; }
+
+  const output = document.getElementById('aiResumeOutput');
+  showAILoading(output, 'Analyzing resume');
+
+  try {
+    const res = await callClaude(
+      text,
+      'You are DevDebug AI, an expert resume reviewer for software developer internship roles. Analyze the resume and give 6 specific, actionable feedback points. Each point must start with "- ". Focus on: ATS optimization, impact metrics, action verbs, keyword gaps, project descriptions, contact info. Be direct, sharp, specific — not generic HR advice.'
+    );
+    output.textContent = res;
+    output.classList.add('show');
+  } catch (e) {
+    output.textContent = 'AI feedback unavailable. Check your connection and try again.';
+    output.classList.add('show');
+  }
+}
+
+async function getResumeRewrite() {
+  const text = document.getElementById('aiResumeInput').value.trim();
+  if (!text) { toast('Please add resume text first', 'error'); return; }
+
+  const output = document.getElementById('aiResumeOutput');
+  showAILoading(output, 'Rebuilding resume content');
+
+  try {
+    const res = await callClaude(
+      `Rewrite this resume content to be significantly stronger:\n\n${text}`,
+      'You are DevDebug AI Resume Rebuilder. Rewrite the experience and project bullets to be stronger. Use power action verbs, add impact framing with [X%] or [N users] placeholders where metrics should go. Output format:\n\nBEFORE:\n[original bullet]\n\nAFTER:\n[improved bullet]\n\n---\n\nDo this for each experience/project bullet. Keep improvements realistic and specific.'
+    );
+
+    // Show before/after
+    const beforeAfterSection = document.getElementById('beforeAfterSection');
+    const baAfter = document.getElementById('baAfterContent');
+    const baBefore = document.getElementById('baBeforeContent');
+
+    baBefore.textContent = text.substring(0, 600) + (text.length > 600 ? '...' : '');
+    baAfter.textContent = res;
+    beforeAfterSection.style.display = 'block';
+
+    output.textContent = '✓ Rebuild complete — see Before / After preview below.';
+    output.classList.add('show');
+    beforeAfterSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    output.textContent = 'Rebuild unavailable. Check your connection.';
+    output.classList.add('show');
+  }
+}
+
+// ═══════════════════════ PORTFOLIO ANALYSIS ═══════════════════════
+async function runPortfolioAnalysis() {
+  const url = document.getElementById('portfolioUrl').value.trim();
+  if (!url || !url.startsWith('http')) { toast('Enter a valid URL starting with https://', 'error'); return; }
+
+  document.getElementById('port-upload').style.display = 'none';
+  document.getElementById('port-loading').style.display = 'block';
+  document.getElementById('port-results').style.display = 'none';
+
+  runLoadingSequence('pl', 5, async () => {
+    try {
+      const analysis = await analyzePortfolio(url);
+      state.portfolioAnalysis = analysis;
+      renderPortfolioResults(analysis);
+      saveToHistory('portfolio', analysis);
+      document.getElementById('port-loading').style.display = 'none';
+      document.getElementById('port-results').style.display = 'block';
+      generateRoastContent(analysis.extractedText, 'portfolio');
+      document.getElementById('aiPortInput').value = analysis.extractedText.substring(0, 1000);
+    } catch (e) {
+      toast('Could not fetch portfolio. Make sure CORS is enabled or try the demo.', 'error');
+      document.getElementById('port-upload').style.display = 'block';
+      document.getElementById('port-loading').style.display = 'none';
+    }
+  });
+}
+
+async function analyzePortfolio(url) {
+  // Use Claude API to analyze the URL since direct fetch may have CORS issues
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  let html = '', extractedText = '';
+
+  try {
+    const res = await fetch(proxyUrl);
+    const data = await res.json();
+    html = data.contents || '';
+    // Strip HTML tags for text
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    extractedText = div.innerText || div.textContent || '';
+    extractedText = extractedText.replace(/\s+/g, ' ').trim().substring(0, 3000);
+  } catch (e) {
+    // Fallback: use Claude to analyze based on URL
+    extractedText = `Portfolio at ${url}`;
+  }
+
+  const lower = (html + extractedText).toLowerCase();
+
+  // Section detection
+  const checks = {
+    about: lower.includes('about') || lower.includes('who i am') || lower.includes('bio'),
+    projects: lower.includes('project') || lower.includes('work') || lower.includes('portfolio'),
+    contact: lower.includes('contact') || lower.includes('email') || lower.includes('reach'),
+    github: lower.includes('github'),
+    linkedin: lower.includes('linkedin'),
+    resume: lower.includes('resume') || lower.includes('cv') || lower.includes('download'),
+    cta: lower.includes('hire') || lower.includes('available') || lower.includes('opportunity') || lower.includes("let's talk") || lower.includes('get in touch'),
+    mobile: html.includes('viewport') || html.includes('responsive') || html.includes('meta name="viewport"'),
+    metrics: /\d+\+?\s*(user|project|client|star|fork|deploy|download)/i.test(extractedText),
+    social: lower.includes('twitter') || lower.includes('instagram') || lower.includes('behance') || lower.includes('dribbble'),
+  };
+
+  const checkList = [
+    { label: 'About section', key: 'about', severity: 'error' },
+    { label: 'Projects section', key: 'projects', severity: 'error' },
+    { label: 'Contact section', key: 'contact', severity: 'error' },
+    { label: 'GitHub link', key: 'github', severity: 'warning' },
+    { label: 'LinkedIn link', key: 'linkedin', severity: 'warning' },
+    { label: 'Resume download link', key: 'resume', severity: 'warning' },
+    { label: 'Call to action', key: 'cta', severity: 'warning' },
+    { label: 'Mobile responsive', key: 'mobile', severity: 'warning' },
+    { label: 'Project impact metrics', key: 'metrics', severity: 'warning' },
+    { label: 'Social links', key: 'social', severity: 'low' },
+  ];
+
+  const passedChecks = checkList.filter(c => checks[c.key]);
+  const failedErrors = checkList.filter(c => !checks[c.key] && c.severity === 'error');
+  const failedWarnings = checkList.filter(c => !checks[c.key] && c.severity === 'warning');
+
+  // Score calculation
+  const completeness = passedChecks.length / checkList.length;
+  const credibility = (checks.github ? 20 : 0) + (checks.projects ? 20 : 0) + (checks.metrics ? 15 : 0);
+  const contactability = (checks.contact ? 25 : 0) + (checks.linkedin ? 10 : 0) + (checks.resume ? 15 : 0);
+  const recruiterReady = (checks.cta ? 10 : 0) + (checks.mobile ? 10 : 0) + (checks.about ? 10 : 0);
+
+  const rawScore = Math.round((completeness * 40) + (credibility / 5.5) + (contactability / 5) + (recruiterReady / 3));
+  const health = Math.min(98, Math.max(30, rawScore));
+  const confidence = Math.round(health * 0.85);
+
+  // Bugs
+  const bugs = [];
+  let bIdx = 1;
+  if (!checks.contact) bugs.push({ id: bIdx++, title: 'Missing contact section', severity: 'critical', desc: 'Recruiters who want to reach you outside job portals have no way to do so. Warm outreach dies here.', fix: 'Add a contact page or section with email, LinkedIn, and a contact form.' });
+  if (!checks.resume) bugs.push({ id: bIdx++, title: 'No resume download link', severity: 'high', desc: 'Your portfolio is top of funnel. If recruiters cannot grab your resume in one click, they leave and do not return.', fix: 'Add a "Download Resume" button in your nav and hero section, linking to a PDF.' });
+  if (!checks.metrics) bugs.push({ id: bIdx++, title: 'No project impact metrics', severity: 'high', desc: 'Every project says what it is. None say what it achieved. Numbers separate projects from achievements.', fix: 'Add one stat per project — user count, performance gain, stars, uptime, or usage metrics.' });
+  if (!checks.cta) bugs.push({ id: bIdx++, title: 'Weak or missing call to action', severity: 'medium', desc: 'No CTA means visitors finish browsing and close the tab. You need to tell them exactly what to do next.', fix: '"Open to internship opportunities — let\'s talk" with a link to your contact form in the hero.' });
+  if (!checks.linkedin) bugs.push({ id: bIdx++, title: 'No LinkedIn link', severity: 'medium', desc: 'Recruiters validate candidates on LinkedIn before reaching out. A missing link adds friction.', fix: 'Add your LinkedIn profile URL in the header or footer.' });
+
+  const strengths = [];
+  if (checks.about) strengths.push('About section clearly establishes your identity');
+  if (checks.projects) strengths.push('Projects section found — proof of work exists');
+  if (checks.github) strengths.push('GitHub linked — code is verifiable');
+  if (checks.mobile) strengths.push('Mobile responsive — professional baseline');
+  if (checks.social) strengths.push('Social presence adds personality');
+
+  const weaknesses = [];
+  if (!checks.contact) weaknesses.push('No contact section — recruiters cannot reach you');
+  if (!checks.metrics) weaknesses.push('Projects lack impact numbers');
+  if (!checks.resume) weaknesses.push('No resume download — key friction point');
+  if (!checks.cta) weaknesses.push('No clear next step for the recruiter');
+  if (!checks.linkedin) weaknesses.push('LinkedIn missing — validation gap');
+
+  const confidenceQuote = health >= 80
+    ? '"Strong portfolio. Would forward to hiring manager."'
+    : health >= 65
+    ? '"Good work, but needs a contact section and more project metrics before I\'d reach out."'
+    : '"Interesting projects, but I can\'t reach them and there\'s no clear signal they\'re available. Moving on."';
+
+  return {
+    url, html, extractedText, health, confidence, checks, checkList,
+    passedChecks, failedErrors, failedWarnings,
+    bugs, strengths, weaknesses, confidenceQuote,
+    errorCount: failedErrors.length, warnCount: failedWarnings.length, passedCount: passedChecks.length
+  };
+}
+
+function renderPortfolioResults(a) {
+  // Score
+  document.getElementById('portScoreNum').textContent = a.health;
+  const offset = 263.9 - (263.9 * a.health / 100);
+  document.getElementById('portCircle').setAttribute('stroke-dashoffset', offset);
+  const color = a.health >= 80 ? '#7a8a78' : a.health >= 65 ? '#d99a5b' : '#d6634d';
+  document.getElementById('portCircle').setAttribute('stroke', color);
+  document.getElementById('portErrors').textContent = a.errorCount + ' errors';
+  document.getElementById('portWarnings').textContent = a.warnCount + ' warnings';
+  document.getElementById('portPassed').textContent = a.passedCount + ' passed';
+
+  // Checklist
+  document.getElementById('portChecklist').innerHTML = a.checkList.map(c => {
+    const pass = a.checks[c.key];
+    const subText = pass ? (c.key === 'about' ? 'Detected' : c.key === 'projects' ? 'Found' : c.key === 'mobile' ? 'Passed' : 'Detected') : (c.severity === 'error' ? 'Missing — error' : 'Not found — warning');
+    const subColor = pass ? 'var(--ink-3)' : (c.severity === 'error' ? 'var(--red-light)' : 'var(--amber-light)');
+    return `<div class="check-item">
+      <div class="check-icon ${pass ? 'pass' : 'fail'}">${pass ? '✓' : '✕'}</div>
+      <div class="check-text">${c.label}</div>
+      <div class="check-sub" style="color:${subColor}">${subText}</div>
+    </div>`;
+  }).join('');
+
+  // Rec grid
+  document.getElementById('portStrengths').innerHTML = a.strengths.map(s => `<div class="rec-item">${s}</div>`).join('') || '<div class="rec-item">No clear strengths detected</div>';
+  document.getElementById('portWeaknesses').innerHTML = a.weaknesses.map(w => `<div class="rec-item">${w}</div>`).join('') || '<div class="rec-item">No major weaknesses found</div>';
+
+  // Confidence
+  document.getElementById('portConfidence').textContent = a.confidence + '%';
+  document.getElementById('portQuote').textContent = a.confidenceQuote;
+
+  // Bugs
+  document.getElementById('portBugsGrid').innerHTML = a.bugs.map(b => `
+    <div class="bug-card ${b.severity}">
+      <div class="bug-header">
+        <span class="bug-id">Bug #${String(b.id).padStart(3,'0')}</span>
+        <span class="bug-title">${b.title}</span>
+        <span class="sev-badge ${b.severity}">${b.severity.toUpperCase()}</span>
+      </div>
+      <div class="bug-desc">${b.desc}</div>
+      <div class="bug-fix">Fix: ${b.fix}</div>
+    </div>`).join('');
+}
+
+async function getPortfolioFeedback() {
+  const text = document.getElementById('aiPortInput').value.trim();
+  if (!text) { toast('Add portfolio description first', 'error'); return; }
+  const output = document.getElementById('aiPortOutput');
+  showAILoading(output, 'Analyzing portfolio');
+  try {
+    const res = await callClaude(
+      text,
+      'You are DevDebug AI, an expert portfolio reviewer for software developer internship roles. Give 6 specific, actionable feedback points. Each starts with "- ". Focus on: missing sections, project impact, recruiter impression, contact accessibility, CTA, branding. Be direct and sharp.'
+    );
+    output.textContent = res;
+    output.classList.add('show');
+  } catch (e) {
+    output.textContent = 'AI feedback unavailable. Check connection.';
+    output.classList.add('show');
+  }
+}
+
+// ═══════════════════════ CLAUDE API ═══════════════════════
+async function callClaude(userMsg, systemMsg) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: systemMsg,
+      messages: [{ role: 'user', content: userMsg }]
+    })
+  });
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  const data = await res.json();
+  const text = data.content?.map(c => c.type === 'text' ? c.text : '').join('') || '';
+  if (!text) throw new Error('Empty response');
+  return text;
+}
+
+function showAILoading(outputEl, label) {
+  outputEl.innerHTML = `<div class="ai-loading-inline"><span>${label}</span><span class="ai-dots"><span>.</span><span>.</span><span>.</span></span></div>`;
+  outputEl.classList.add('show');
+}
+
+// ═══════════════════════ HISTORY & PERSISTENCE ═══════════════════════
+function saveToHistory(type, analysis) {
+  const entry = {
+    id: Date.now(),
+    type,
+    timestamp: new Date().toISOString(),
+    health: analysis.health,
+    atsTotal: analysis.atsTotal || null,
+    bugCount: analysis.bugs.length,
+    url: analysis.url || null,
+    errorCount: analysis.errorCount,
+    warnCount: analysis.warnCount,
+  };
+  state.history.unshift(entry);
+  if (state.history.length > 20) state.history = state.history.slice(0, 20);
+  localStorage.setItem('devdebug_history', JSON.stringify(state.history));
+}
+
+function clearHistory() {
+  if (!confirm('Clear all analysis history?')) return;
+  state.history = [];
+  localStorage.removeItem('devdebug_history');
+  state.resumeAnalysis = null;
+  state.portfolioAnalysis = null;
+  updateDashboard();
+  toast('History cleared');
+}
+
+// ═══════════════════════ DASHBOARD ═══════════════════════
+function updateDashboard() {
+  const resumeEntry = state.history.find(h => h.type === 'resume');
+  const portEntry = state.history.find(h => h.type === 'portfolio');
+
+  const resumeHealth = resumeEntry?.health || 0;
+  const portHealth = portEntry?.health || 0;
+  const hasData = resumeEntry || portEntry;
+
+  const totalErrors = (state.resumeAnalysis?.errorCount || 0) + (state.portfolioAnalysis?.errorCount || 0);
+  const totalWarnings = (state.resumeAnalysis?.warnCount || 0) + (state.portfolioAnalysis?.warnCount || 0);
+  const atsScore = state.resumeAnalysis?.atsTotal || 0;
+
+  let readiness = 0;
+  if (resumeHealth && portHealth) readiness = Math.round((resumeHealth + portHealth) / 2);
+  else if (resumeHealth) readiness = Math.round(resumeHealth * 0.9);
+  else if (portHealth) readiness = Math.round(portHealth * 0.9);
+
+  document.getElementById('dashTotal').innerHTML = (hasData ? readiness : '—') + '<span>/100</span>';
+  document.getElementById('dashResume').textContent = resumeHealth ? resumeHealth + '%' : '—%';
+  document.getElementById('dashPortfolio').textContent = portHealth ? portHealth + '%' : '—%';
+  document.getElementById('dashErrors').textContent = hasData ? totalErrors : '—';
+  document.getElementById('dashWarnings').textContent = hasData ? totalWarnings : '—';
+  document.getElementById('dashAts').textContent = atsScore ? atsScore + '/100' : '—';
+
+  const statusEl = document.getElementById('dashBuildStatus');
+  if (!hasData) { statusEl.innerHTML = '<div class="status-dot"></div>No analyses run yet'; }
+  else if (totalErrors > 0) { statusEl.innerHTML = '<div class="status-dot" style="background:var(--red)"></div>Build failed — ' + totalErrors + ' critical error' + (totalErrors > 1 ? 's' : ''); }
+  else { statusEl.innerHTML = '<div class="status-dot"></div>Build successful'; }
+
+  // Top bugs
+  const allBugs = [...(state.resumeAnalysis?.bugs || []).map(b => ({...b, source: 'resume'})), ...(state.portfolioAnalysis?.bugs || []).map(b => ({...b, source: 'portfolio'}))];
+  const topBugs = allBugs.filter(b => b.severity === 'critical' || b.severity === 'high').slice(0, 4);
+
+  if (topBugs.length > 0) {
+    document.getElementById('dashBugs').innerHTML = `<div class="bug-grid">${topBugs.map(b => `
+      <div class="bug-card ${b.severity}">
+        <div class="bug-header">
+          <span class="bug-id">${b.source.toUpperCase()}</span>
+          <span class="bug-title">${b.title}</span>
+          <span class="sev-badge ${b.severity}">${b.severity.toUpperCase()}</span>
+        </div>
+        <div class="bug-desc">${b.desc}</div>
+        <div class="bug-fix">Fix: ${b.fix}</div>
+      </div>`).join('')}</div>`;
+  } else if (hasData) {
+    document.getElementById('dashBugs').innerHTML = '<div class="empty-state"><div class="empty-icon">✓</div><div class="empty-title">No critical bugs found</div></div>';
+  }
+
+  // Roadmap
+  if (hasData) {
+    const sprint1 = allBugs.filter(b => b.severity === 'critical').map(b => b.fix.split('.')[0]);
+    const sprint2 = allBugs.filter(b => b.severity === 'high').map(b => b.fix.split('.')[0]);
+    const sprint3 = allBugs.filter(b => b.severity === 'medium').map(b => b.fix.split('.')[0]);
+    document.getElementById('dashRoadmap').innerHTML = `
+      ${sprint1.length ? `<div class="patch"><div class="patch-ver">Sprint 1 — this week (critical)</div>${sprint1.map(i => `<div class="patch-item">${i}</div>`).join('')}</div>` : ''}
+      ${sprint2.length ? `<div class="patch"><div class="patch-ver">Sprint 2 — next week (high priority)</div>${sprint2.map(i => `<div class="patch-item">${i}</div>`).join('')}</div>` : ''}
+      ${sprint3.length ? `<div class="patch"><div class="patch-ver">Sprint 3 — before applications (medium)</div>${sprint3.map(i => `<div class="patch-item">${i}</div>`).join('')}</div>` : ''}
+    `;
+  }
+
+  // History
+  if (state.history.length > 0) {
+    document.getElementById('dashHistory').innerHTML = state.history.slice(0, 8).map(h => `
+      <div class="history-item" onclick="showPage('${h.type}')">
+        <div class="history-icon">${h.type === 'resume' ? '📄' : '⛰'}</div>
+        <div class="history-meta">
+          <div class="history-type">${h.type.toUpperCase()} ANALYSIS</div>
+          <div class="history-title">${h.url || 'Resume scan'} — ${h.bugCount} bugs detected</div>
+        </div>
+        <div class="history-time">${formatTime(h.timestamp)}</div>
+        <div class="history-score">${h.health}</div>
+      </div>`).join('');
+  }
+}
+
+function formatTime(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'just now';
+  if (diff < 3600000) return Math.round(diff / 60000) + 'm ago';
+  if (diff < 86400000) return Math.round(diff / 3600000) + 'h ago';
+  return d.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+}
+
+// ═══════════════════════ REPORT DOWNLOAD ═══════════════════════
+function generateReportText(type) {
+  const a = type === 'resume' ? state.resumeAnalysis : state.portfolioAnalysis;
+  if (!a) return null;
+
+  const lines = [
+    'DevDebug AI — ' + (type === 'resume' ? 'Resume' : 'Portfolio') + ' Analysis Report',
+    'Generated: ' + new Date().toLocaleString(),
+    '═══════════════════════════════════════',
+    '',
+    'HEALTH SCORE: ' + a.health + '/100',
+    (type === 'resume' ? 'ATS SCORE: ' + a.atsTotal + '/100' : 'CONFIDENCE: ' + a.confidence + '%'),
+    '',
+    '─── BUGS DETECTED (' + a.bugs.length + ') ───',
+    ...a.bugs.map(b => `[${b.severity.toUpperCase()}] ${b.title}\n  ${b.desc}\n  Fix: ${b.fix}`),
+    '',
+    type === 'resume' ? '─── MISSING KEYWORDS ───\n' + (a.missingTech || []).join(', ') : '─── WEAKNESSES ───\n' + (a.weaknesses || []).join('\n'),
+    '',
+    '─── RECOMMENDATIONS ───',
+    '1. Address all critical bugs first',
+    '2. Fix high-priority issues within one week',
+    '3. Handle medium issues before next application cycle',
+    '',
+    'Built by DevDebug AI — digitalheroesco.com',
+  ];
+  return lines.join('\n');
+}
+
+function downloadReport() {
+  const text = generateReportText('resume');
+  if (!text) { toast('Run an analysis first', 'error'); return; }
+  downloadText(text, 'devdebug-resume-report.txt');
+  toast('Report downloaded ✓', 'success');
+}
+
+function downloadPortfolioReport() {
+  const text = generateReportText('portfolio');
+  if (!text) { toast('Run an analysis first', 'error'); return; }
+  downloadText(text, 'devdebug-portfolio-report.txt');
+  toast('Report downloaded ✓', 'success');
+}
+
+function downloadFullReport() {
+  if (!state.resumeAnalysis && !state.portfolioAnalysis) { toast('Run at least one analysis first', 'error'); return; }
+  let text = generateReportText('resume') || '';
+  if (state.portfolioAnalysis) text += '\n\n\n' + generateReportText('portfolio');
+  downloadText(text, 'devdebug-full-report.txt');
+  toast('Full report downloaded ✓', 'success');
+}
+
+function downloadText(text, filename) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ═══════════════════════ INIT ═══════════════════════
+showPage('home');
+</script>
+</body>
+</html>

@@ -1,36 +1,224 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevDebug AI 🚀
 
-## Getting Started
+**Debug your career before recruiters do.**
 
-First, run the development server:
+DevDebug AI is a premium AI-powered platform that helps developers analyze their resumes and portfolios, identify career bugs, improve ATS readiness, and receive actionable recruiter-style feedback before applying for internships or jobs.
+
+---
+
+## ✨ Features
+
+### 📄 Resume Debugger
+
+Upload a resume and receive:
+
+* ATS Score
+* Missing Keywords Detection
+* Resume Structure Analysis
+* Formatting Review
+* Bullet Point Quality Analysis
+* Readability Insights
+* Project Quality Assessment
+* AI-Powered Improvement Suggestions
+
+---
+
+### 🌐 Portfolio Debugger
+
+Analyze your portfolio website and receive:
+
+* Portfolio Health Score
+* UX & Structure Feedback
+* Missing Sections Detection
+* Recruiter Perspective Analysis
+* Credibility & Trust Signals Review
+* Improvement Recommendations
+
+---
+
+### 🐛 Career Bug Detection
+
+DevDebug AI identifies weaknesses as actionable bugs.
+
+Example:
+
+**Bug #1**
+Severity: High
+
+Your project descriptions explain what you built but not the impact.
+
+**Suggested Fix**
+Add measurable outcomes, user impact, and technical achievements.
+
+---
+
+### 🔥 Roast Mode
+
+Constructive but brutally honest feedback designed to help developers improve faster.
+
+---
+
+### 📊 Career Dashboard
+
+Track your career readiness with:
+
+* Resume Health
+* Portfolio Health
+* Developer Readiness Score
+* Analysis History
+* Recommended Improvements
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* Next.js 15 (App Router)
+* TypeScript
+* Tailwind CSS
+* Framer Motion
+* shadcn/ui
+
+### AI
+
+* Google Gemini API
+
+### Utilities
+
+* PDF Parsing
+* Rule-Based ATS Engine
+* Local Storage Persistence
+
+---
+
+## 🏗️ Architecture
+
+```bash
+src/
+│
+├── app/
+│   ├── page.tsx
+│   ├── resume/
+│   ├── portfolio/
+│   ├── dashboard/
+│   └── api/
+│
+├── components/
+│   ├── HeroSection
+│   ├── Navbar
+│   ├── Footer
+│   ├── WorkspaceLayout
+│   └── Feature Components
+│
+├── lib/
+│   ├── ats-engine.ts
+│   ├── gemini.ts
+│   ├── storage.ts
+│   └── utils.ts
+│
+└── public/
+    └── hero-bg.mp4
+```
+
+---
+
+## 🎯 ATS Scoring System
+
+DevDebug AI uses a deterministic rule-based ATS engine.
+
+### Scoring Breakdown
+
+| Category         | Points |
+| ---------------- | ------ |
+| Keywords         | 30     |
+| Resume Structure | 20     |
+| Formatting       | 15     |
+| Bullet Quality   | 15     |
+| Readability      | 10     |
+| Project Quality  | 10     |
+
+**Total Score: 100**
+
+This provides consistent and explainable ATS scoring instead of relying solely on AI-generated estimates.
+
+---
+
+## 🚀 Getting Started
+
+### Clone Repository
+
+```bash
+git clone <repository-url>
+cd DevDebugAI
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Configure Environment Variables
+
+Create:
+
+```bash
+.env.local
+```
+
+Add:
+
+```env
+GEMINI_API_KEY=YOUR_API_KEY
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌟 Future Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+### Coming Soon
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* GitHub Repository Analyzer
+* LinkedIn Profile Analyzer
+* AI Resume Rebuilder
+* Cover Letter Generator
+* Recruiter Simulation Mode
+* Career Progress Tracking
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📷 Screenshots
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Add screenshots of:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Homepage
+* Resume Debugger
+* Portfolio Debugger
+* Dashboard
+
+---
+
+## 👨‍💻 Author
+
+**Bhavya Pandey**
+
+Built as part of the Digital Heroes Developer Trial Task.
+
+---
+
+## 📄 License
+
+This project is intended for educational, portfolio, and demonstration purposes.
